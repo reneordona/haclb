@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quote of the Day</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --main: #05c3de;
+    --secondary: #236092;
+    --text: #FFFFFF;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    background: var(--secondary);
+    color: var(--text);
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    position: relative;
+  }
+
+  /* Geometric background shapes */
+  body::before {
+    content: '';
+    position: absolute;
+    top: -120px;
+    right: -120px;
+    width: 480px;
+    height: 480px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(5,195,222,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  body::after {
+    content: '';
+    position: absolute;
+    bottom: -100px;
+    left: -100px;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(5,195,222,0.13) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* Diagonal accent bar */
+  .accent-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: linear-gradient(90deg, var(--main), #0af0ff, var(--secondary));
+  }
+
+  .accent-bar-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: linear-gradient(90deg, var(--secondary), var(--main), #0af0ff);
+  }
+
+  /* Left vertical stripe */
+  .left-stripe {
+    position: absolute;
+    left: 0;
+    top: 6px;
+    bottom: 6px;
+    width: 5px;
+    background: rgba(5,195,222,0.3);
+  }
+
+  /* Corner decoration */
+  .corner-tl {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 60px;
+    height: 60px;
+    border-top: 2px solid rgba(5,195,222,0.4);
+    border-left: 2px solid rgba(5,195,222,0.4);
+  }
+
+  .corner-br {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border-bottom: 2px solid rgba(5,195,222,0.4);
+    border-right: 2px solid rgba(5,195,222,0.4);
+  }
+
+  /* Date label */
+  .date-label {
+    position: absolute;
+    top: 32px;
+    right: 40px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--main);
+    opacity: 0.9;
+  }
+
+  /* QUOTE OF THE DAY label */
+  .label {
+    position: absolute;
+    top: 32px;
+    left: 40px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--main);
+    opacity: 0.85;
+  }
+
+  /* Main content container */
+  .container {
+    max-width: 900px;
+    width: 90%;
+    padding: 60px 20px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    transform: translateY(24px);
+    animation: fadeUp 1s ease forwards 0.3s;
+  }
+
+  /* Large decorative quotation mark */
+  .quote-icon {
+    display: block;
+    font-family: 'Playfair Display', serif;
+    font-size: 7rem;
+    line-height: 0.5;
+    color: var(--main);
+    opacity: 0.5;
+    margin-bottom: 16px;
+    user-select: none;
+  }
+
+  /* Horizontal rule with glow */
+  .divider {
+    width: 60px;
+    height: 2px;
+    background: var(--main);
+    margin: 0 auto 36px;
+    box-shadow: 0 0 12px rgba(5,195,222,0.7);
+    border: none;
+    opacity: 0;
+    animation: fadeIn 0.8s ease forwards 1s;
+  }
+
+  /* Quote text */
+  .quote-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.5rem, 3.5vw, 2.4rem);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.55;
+    color: var(--text);
+    margin-bottom: 40px;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.25);
+    letter-spacing: 0.01em;
+  }
+
+  /* Author line */
+  .author-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    opacity: 0;
+    animation: fadeIn 0.8s ease forwards 1.1s;
+  }
+
+  .author-line {
+    width: 36px;
+    height: 1px;
+    background: var(--main);
+    display: inline-block;
+  }
+
+  .author-name {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--main);
+  }
+
+  /* Loading state */
+  .loading {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.5);
+    font-style: italic;
+  }
+
+  /* Error state */
+  .error-state {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+    font-style: italic;
+    line-height: 1.6;
+    color: var(--text);
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+
+  /* Quote swap fade transition */
+  .fade-out { animation: fadeOutAnim 0.6s ease forwards; }
+  .fade-in  { animation: fadeInAnim 0.8s ease forwards; }
+
+  @keyframes fadeOutAnim {
+    to { opacity: 0; transform: translateY(-10px); }
+  }
+  @keyframes fadeInAnim {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+</style>
+</head>
+<body>
+
+  <div class="accent-bar"></div>
+  <div class="accent-bar-bottom"></div>
+  <div class="left-stripe"></div>
+  <div class="corner-tl"></div>
+  <div class="corner-br"></div>
+
+  <div class="label">Quote of the Day</div>
+  <div class="date-label" id="dateLabel"></div>
+
+  <div class="container" id="quoteContainer">
+    <span class="quote-icon">&ldquo;</span>
+    <hr class="divider">
+    <p class="quote-text loading" id="quoteText">Loading today's quote…</p>
+    <div class="author-wrap" id="authorWrap" style="visibility:hidden;">
+      <span class="author-line"></span>
+      <span class="author-name" id="authorName"></span>
+      <span class="author-line"></span>
+    </div>
+  </div>
+
+<script>
+  // ─── Fallback quotes (workplace-appropriate, motivational) ───────────────────
+  const FALLBACK_QUOTES = [
+    { q: "The secret of getting ahead is getting started.", a: "Mark Twain" },
+    { q: "Quality is not an act, it is a habit.", a: "Aristotle" },
+    { q: "Coming together is a beginning, staying together is progress, and working together is success.", a: "Henry Ford" },
+    { q: "It always seems impossible until it is done.", a: "Nelson Mandela" },
+    { q: "Strive not to be a success, but rather to be of value.", a: "Albert Einstein" },
+    { q: "Success is the sum of small efforts, repeated day in and day out.", a: "Robert Collier" },
+    { q: "Alone we can do so little; together we can do so much.", a: "Helen Keller" },
+    { q: "Do what you can, with what you have, where you are.", a: "Theodore Roosevelt" },
+    { q: "The only way to do great work is to love what you do.", a: "Steve Jobs" },
+    { q: "In the middle of every difficulty lies opportunity.", a: "Albert Einstein" },
+    { q: "Start where you are. Use what you have. Do what you can.", a: "Arthur Ashe" },
+    { q: "It does not matter how slowly you go as long as you do not stop.", a: "Confucius" },
+    { q: "Hard work beats talent when talent doesn't work hard.", a: "Tim Notke" },
+    { q: "Success usually comes to those who are too busy to be looking for it.", a: "Henry David Thoreau" },
+    { q: "The future depends on what you do today.", a: "Mahatma Gandhi" },
+    { q: "You don't have to be great to start, but you have to start to be great.", a: "Zig Ziglar" },
+    { q: "Teamwork makes the dream work.", a: "John C. Maxwell" },
+    { q: "A goal without a plan is just a wish.", a: "Antoine de Saint-Exupéry" },
+    { q: "Opportunities don't happen. You create them.", a: "Chris Grosser" },
+    { q: "Your work is going to fill a large part of your life. Make it count.", a: "Steve Jobs" },
+    { q: "Productivity is never an accident. It is always the result of a commitment to excellence.", a: "Paul J. Meyer" },
+    { q: "Great things in business are never done by one person; they're done by a team.", a: "Steve Jobs" },
+    { q: "Action is the foundational key to all success.", a: "Pablo Picasso" },
+    { q: "You are never too old to set another goal or to dream a new dream.", a: "C.S. Lewis" },
+    { q: "Believe you can and you're halfway there.", a: "Theodore Roosevelt" },
+    { q: "Nothing will work unless you do.", a: "Maya Angelou" },
+    { q: "The best way to predict the future is to create it.", a: "Peter Drucker" },
+    { q: "Don't watch the clock; do what it does. Keep going.", a: "Sam Levenson" },
+    { q: "Hardships often prepare ordinary people for an extraordinary destiny.", a: "C.S. Lewis" },
+    { q: "What you do today can improve all your tomorrows.", a: "Ralph Marston" },
+  ];
+
+  // ─── Display the date ────────────────────────────────────────────────────────
+  function setDate() {
+    const now = new Date();
+    const opts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('dateLabel').textContent =
+      now.toLocaleDateString('en-US', opts);
+  }
+
+  // ─── Pick a quote deterministically by day (same quote all day) ──────────────
+  function getDailyFallback() {
+    const now = new Date();
+    const dayIndex = Math.floor(now.getTime() / 86400000); // days since epoch
+    return FALLBACK_QUOTES[dayIndex % FALLBACK_QUOTES.length];
+  }
+
+  // ─── Render quote ────────────────────────────────────────────────────────────
+  function renderQuote(text, author) {
+    const qEl = document.getElementById('quoteText');
+    const aEl = document.getElementById('authorName');
+    const wEl = document.getElementById('authorWrap');
+
+    qEl.classList.remove('loading', 'error-state');
+    qEl.textContent = text;
+    aEl.textContent = author || 'Unknown';
+    wEl.style.visibility = 'visible';
+  }
+
+  // ─── Fetch from ZenQuotes with fallback ──────────────────────────────────────
+  async function loadQuote() {
+    setDate();
+
+    // Check if we already fetched a quote today (cache by date string)
+    const today = new Date().toDateString();
+    const cached = sessionStorage.getItem('qtd_date');
+    if (cached === today) {
+      const cq = sessionStorage.getItem('qtd_quote');
+      const ca = sessionStorage.getItem('qtd_author');
+      if (cq) { renderQuote(cq, ca); return; }
+    }
+
+    // Try ZenQuotes API (free, no key needed, CORS-friendly via today endpoint)
+    try {
+      const res = await fetch('https://zenquotes.io/api/today', { mode: 'cors' });
+      if (!res.ok) throw new Error('API error');
+      const data = await res.json();
+      if (data && data[0] && data[0].q && data[0].a) {
+        const q = data[0].q;
+        const a = data[0].a;
+        sessionStorage.setItem('qtd_date', today);
+        sessionStorage.setItem('qtd_quote', q);
+        sessionStorage.setItem('qtd_author', a);
+        renderQuote(q, a);
+        return;
+      }
+    } catch (e) {
+      // API unreachable — use fallback
+    }
+
+    // Fallback: deterministic daily quote from local list
+    const fb = getDailyFallback();
+    renderQuote(fb.q, fb.a);
+  }
+
+  // ─── Init ────────────────────────────────────────────────────────────────────
+  loadQuote();
+
+  // Refresh at midnight
+  function scheduleNextDay() {
+    const now = new Date();
+    const msUntilMidnight =
+      new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1) - now;
+    setTimeout(() => {
+      sessionStorage.clear();
+      loadQuote();
+      scheduleNextDay();
+    }, msUntilMidnight);
+  }
+  scheduleNextDay();
+</script>
+</body>
+</html>
